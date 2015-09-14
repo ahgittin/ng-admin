@@ -22,7 +22,7 @@ define(function () {
         $scope.$on('$destroy', this.destroy.bind(this));
 
         this.previousStateParametersDeferred = $q.defer();
-        $scope.$once('$stateChangeSuccess', (event, to, toParams, from, fromParams) => {
+        $scope.$on('$stateChangeSuccess', (event, to, toParams, from, fromParams) => {
             this.previousStateParametersDeferred.resolve(fromParams);
         });
     };
