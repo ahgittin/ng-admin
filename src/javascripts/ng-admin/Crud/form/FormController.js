@@ -47,7 +47,7 @@ FormController.prototype.submitCreation = function ($event) {
     }
     var entity = this.entity;
     var view = this.view;
-    var route = !entity.editionView().enabled ? 'show' : 'edit';
+    var route = 'show'; //!entity.editionView().enabled ? 'show' : 'edit';
     var restEntry = this.$scope.entry.transformToRest(view.fields());
     this.progression.start();
     this.WriteQueries
@@ -66,13 +66,16 @@ FormController.prototype.submitEdition = function ($event) {
         return;
     }
     var view = this.view;
+    var route = 'show'; //!entity.editionView().enabled ? 'show' : 'edit';
     var restEntry = this.$scope.entry.transformToRest(view.fields());
     this.progression.start();
     this.WriteQueries
         .updateOne(view, restEntry, this.originEntityId)
-        .then(() => {
+        .then(rawEntry => {
             this.progression.done();
             this.notification.log('Changes successfully saved.', { addnCls: 'humane-flatty-success' });
+            var entry = view.mapEntry(rawEntry);
+            this.$state.go(this.$state.get(route), { entity: entity.name(), id: entry.identifierValue });
         }, this.handleError.bind(this));
 };
 
